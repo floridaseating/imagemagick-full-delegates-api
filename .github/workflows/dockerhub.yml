@@ -17,6 +17,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: https://index.docker.io/v1/
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
