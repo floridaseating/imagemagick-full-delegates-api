@@ -1,5 +1,5 @@
 {
-  "name": "imagemagick-mask-service",
+  "name": "imagemagick-full-delegates-api",
   "version": "1.0.0",
   "type": "module",
   "description": "HTTP microservice to apply alpha masks and general ImageMagick processing",

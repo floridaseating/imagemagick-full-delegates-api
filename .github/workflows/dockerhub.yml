@@ -21,11 +21,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./imagemagick-mask-service/Dockerfile
+          file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/imagemagick-mask-service:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/imagemagick-mask-service:full
+            ${{ secrets.DOCKERHUB_USERNAME }}/imagemagick-full-delegates-api:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/imagemagick-full-delegates-api:full
 
 
