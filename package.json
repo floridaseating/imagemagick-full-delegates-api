@@ -1,0 +1,19 @@
+{
+  "name": "imagemagick-mask-service",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "HTTP microservice to apply alpha masks and general ImageMagick processing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
+
+
