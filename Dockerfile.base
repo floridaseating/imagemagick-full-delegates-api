@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Build deps & delegates
 RUN apt-get update && apt-get install -y \
   build-essential pkg-config curl ca-certificates wget git \
-  libjpeg-dev libpng-dev libtiff-dev libwebp-dev \
+  libjpeg-turbo8-dev libpng-dev libtiff-dev libwebp-dev \
   libraw-dev dcraw \
   librsvg2-dev librsvg2-bin \
   libheif-dev libde265-dev \
@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
   libfontconfig1-dev libfreetype6-dev libpango1.0-dev \
   libxml2-dev libltdl-dev libfftw3-dev \
   ghostscript gsfonts \
+  exiv2 \
   && rm -rf /var/lib/apt/lists/*
 
 # Build ImageMagick from source with broad delegate support
@@ -24,7 +25,8 @@ RUN wget https://imagemagick.org/archive/ImageMagick.tar.gz \
   && cd ImageMagick-* \
   && ./configure \
      --with-modules \
-     --enable-hdri \
+     --disable-openmp \
+     --disable-hdri \
      --with-jpeg=yes --with-png=yes --with-tiff=yes --with-webp=yes \
      --with-rsvg=yes --with-raw=yes --with-heic=yes --with-openexr=yes \
      --with-openjp2=yes --with-fontconfig=yes --with-freetype=yes \

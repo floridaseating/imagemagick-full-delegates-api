@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=floridaseating/imagemagick-base:7.1.2-full
+ARG BASE_IMAGE=floridaseating/imagemagick-base:latest
 FROM ${BASE_IMAGE}
 
 WORKDIR /app

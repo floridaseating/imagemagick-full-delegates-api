@@ -61,7 +61,10 @@ export async function executePipeline(pipeline, params = {}, tmpDir = '/tmp') {
           
           // Add format-specific args
           if (step.tiff) {
+            // Ensure alpha channel is preserved as an unassociated (straight) alpha in TIFF
+            args.push('-define', 'tiff:alpha=unassociated');
             if (step.tiff.compress) args.push('-compress', step.tiff.compress);
+            if (step.tiff.colorspace) args.push('-colorspace', step.tiff.colorspace);
           }
           if (step.jpg || step.jpeg) {
             const opts = step.jpg || step.jpeg;

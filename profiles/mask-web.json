@@ -20,11 +20,23 @@
       "out": "m"
     },
     {
-      "op": "export",
+      "op": "trimRepage",
       "src": "masked",
+      "out": "t1"
+    },
+    {
+      "op": "colorspace",
+      "src": "t1",
+      "space": "sRGB",
+      "out": "t1s"
+    },
+    {
+      "op": "export",
+      "src": "t1s",
       "as": "tiff",
       "tiff": {
-        "compress": "lzw"
+        "compress": "lzw",
+        "colorspace": "sRGB"
       },
       "s3": {
         "key": "${runId}/final/${base}.tiff",
@@ -32,13 +44,8 @@
       }
     },
     {
-      "op": "trimRepage",
-      "src": "masked",
-      "out": "t1"
-    },
-    {
       "op": "padToAspect",
-      "src": "t1",
+      "src": "t1s",
       "aspect": "3:4",
       "padPct": 0.06,
       "bg": "white",
