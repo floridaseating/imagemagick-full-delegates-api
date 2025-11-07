@@ -86,10 +86,14 @@ export function validatePipeline(pipeline) {
   } else {
     for (const [name, spec] of Object.entries(pipeline.inputs)) {
       if (typeof spec === 'string') {
-        if (!INPUT_TYPES[spec]) {
+        // Accept actual URLs or type declarations
+        const isUrl = spec.startsWith('http://') || spec.startsWith('https://');
+        const isTypeName = INPUT_TYPES[spec];
+        if (!isUrl && !isTypeName) {
           errors.push(`Input "${name}": unknown type "${spec}"`);
         }
       } else if (typeof spec === 'object') {
+        // Accept { type: 's3', ... } or { type: 'base64', ... }
         if (!spec.type || !INPUT_TYPES[spec.type]) {
           errors.push(`Input "${name}": missing or invalid type`);
         }
