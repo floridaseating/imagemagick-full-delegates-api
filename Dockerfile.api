@@ -1,0 +1,24 @@
+ARG BASE_IMAGE=floridaseating/imagemagick-base:7.1.2-full
+FROM ${BASE_IMAGE}
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json ./
+
+# Install production dependencies
+RUN npm install --omit=dev
+
+# Copy application code
+COPY src/ ./src/
+COPY profiles/ ./profiles/
+
+# Expose port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s \
+  CMD node -e "require('http').get('http://localhost:8080/health', r=>process.exit(r.statusCode===200?0:1))"
+
+CMD ["node", "src/server.js"]
+

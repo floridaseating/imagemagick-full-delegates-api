@@ -1,0 +1,67 @@
+{
+  "name": "mask-web",
+  "description": "Apply alpha mask, export TIFF with alpha and web JPG (3:4 aspect, 6% padding, white background)",
+  "schemaVersion": 1,
+  "inputs": {
+    "original": "url",
+    "alpha": "url"
+  },
+  "steps": [
+    {
+      "op": "maskAlpha",
+      "src": "original",
+      "mask": "alpha",
+      "out": "masked",
+      "compress": "lzw"
+    },
+    {
+      "op": "measure",
+      "src": "masked",
+      "out": "m"
+    },
+    {
+      "op": "export",
+      "src": "masked",
+      "as": "tiff",
+      "tiff": {
+        "compress": "lzw"
+      },
+      "s3": {
+        "key": "${runId}/final/${base}.tiff",
+        "contentType": "image/tiff"
+      }
+    },
+    {
+      "op": "trimRepage",
+      "src": "masked",
+      "out": "t1"
+    },
+    {
+      "op": "padToAspect",
+      "src": "t1",
+      "aspect": "3:4",
+      "padPct": 0.06,
+      "bg": "white",
+      "out": "t2"
+    },
+    {
+      "op": "colorspace",
+      "src": "t2",
+      "space": "sRGB",
+      "out": "t3"
+    },
+    {
+      "op": "export",
+      "src": "t3",
+      "as": "jpg",
+      "jpg": {
+        "quality": 95
+      },
+      "s3": {
+        "key": "${runId}/final/${base}.jpg",
+        "contentType": "image/jpeg"
+      }
+    }
+  ]
+}
+
