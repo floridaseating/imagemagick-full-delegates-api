@@ -22,7 +22,14 @@ export async function importImage(spec, tmpDir) {
   
   // URL (http/https)
   if (typeof spec === 'string' && (spec.startsWith('http://') || spec.startsWith('https://'))) {
-    const destPath = path.join(tmpDir, `import-${ts}-${rand}`);
+    let ext = '';
+    try {
+      const u = new URL(spec);
+      const p = u.pathname || '';
+      const e = path.extname(p) || '';
+      if (e && e.length <= 10) ext = e.toLowerCase();
+    } catch {}
+    const destPath = path.join(tmpDir, `import-${ts}-${rand}${ext}`);
     const response = await axios.get(spec, { responseType: 'arraybuffer', timeout: 30000 });
     fs.writeFileSync(destPath, response.data);
     return {
@@ -49,8 +56,13 @@ export async function importImage(spec, tmpDir) {
       chunks.push(chunk);
     }
     const buffer = Buffer.concat(chunks);
-    
-    const destPath = path.join(tmpDir, `import-${ts}-${rand}`);
+    // Preserve extension from key if present (ensures RAW like .arw uses libraw)
+    let ext = '';
+    try {
+      const e = path.extname(key || '') || '';
+      if (e && e.length <= 10) ext = e.toLowerCase();
+    } catch {}
+    const destPath = path.join(tmpDir, `import-${ts}-${rand}${ext}`);
     fs.writeFileSync(destPath, buffer);
     
     return {
