@@ -122,7 +122,7 @@ export async function exportImage(imagePath, step, vars) {
 
   // S3 export
   if (step.s3) {
-    const { bucket, region, key, accessKeyId, secretAccessKey, contentType: s3ContentType } = step.s3;
+    const { bucket, region, key, accessKeyId, secretAccessKey, contentType: s3ContentType, acl } = step.s3;
     
     const s3 = new S3Client({
       region: region || process.env.AWS_REGION || 'us-east-1',
@@ -140,6 +140,7 @@ export async function exportImage(imagePath, step, vars) {
       Key: resolvedKey,
       Body: buffer,
       ContentType: resolvedContentType,
+      ...(acl ? { ACL: acl } : {}),
       ...(step.s3.metadata && { Metadata: step.s3.metadata })
     });
 
