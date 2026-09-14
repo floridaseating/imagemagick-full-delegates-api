@@ -72,22 +72,29 @@ export function buildPadToAspect(step, images, vars) {
   
   const aspectRatio = w / h;
   const padPct = step.padPct || 0;
+  if (!(padPct >= 0 && padPct < 1)) throw new Error(`Invalid padPct: ${padPct} (expected 0 <= padPct < 1)`);
+  // padPct is the TOTAL whitespace fraction of the constraining side: the subject fills
+  // (1 - padPct) of the canvas, so the canvas is the trimmed subject DIVIDED by (1 - padPct).
   const padFactor = 1 / (1 - padPct);
   const bg = step.bg || 'white';
   const gravity = step.gravity || 'center';
 
   // Build expressions for target dimensions
-  // padW = trimW / (1 - padPct), padH = trimH / (1 - padPct)
+  // padW = trimW / (1 - padPct) = trimW * padFactor, padH = trimH * padFactor
   // targetW = max(padW, padH * aspectRatio)
   // targetH = targetW / aspectRatio
-  
+  //
+  // REGRESSION NOTE: this used to compute trimW / padFactor, i.e. trimW * (1 - padPct),
+  // which made the canvas SMALLER than the subject so `-extent` CROPPED 9.1% off every
+  // render instead of padding it (found 2026-09-14 on the FLS product pipeline).
+
   return {
     inputs: [src],
     args: [
       '-set', 'option:trimW', '%[w]',
       '-set', 'option:trimH', '%[h]',
-      '-set', 'option:padW', `%[fx:trimW/${padFactor}]`,
-      '-set', 'option:padH', `%[fx:trimH/${padFactor}]`,
+      '-set', 'option:padW', `%[fx:trimW*${padFactor}]`,
+      '-set', 'option:padH', `%[fx:trimH*${padFactor}]`,
       '-set', 'option:targetW', `%[fx:max(padW,padH*${aspectRatio})]`,
       '-set', 'option:targetH', `%[fx:targetW/${aspectRatio}]`,
       '-background', bg,

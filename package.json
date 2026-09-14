@@ -6,7 +6,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "NODE_ENV=development node src/server.js"
+    "dev": "NODE_ENV=development node src/server.js",
+    "test": "node --test test/"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.709.0",
@@ -16,6 +17,4 @@
   "engines": {
     "node": ">=18"
   }
-}
-
-
+}\n
